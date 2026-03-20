@@ -363,7 +363,7 @@
       </div>
     </div>
 
-    <p class="subtitle">Save up to 10 important dates. Each saved item shows both anniversary styles: total months plus days, and full years plus months plus days.</p>
+    <p class="subtitle">Save up to 10 important dates. Each saved item shows three anniversary styles: total days, total months plus extra days, and full years plus months plus days.</p>
 
     <section class="panel">
       <form id="counterForm">
@@ -379,7 +379,7 @@
           </label>
         </div>
 
-        <div class="inline-preview" id="livePreview">Choose a date and it will immediately show both anniversary styles here.</div>
+        <div class="inline-preview" id="livePreview">Choose a date and it will immediately show total days, months, and years here.</div>
 
         <div class="actions">
           <button type="submit" class="primary">Save date</button>
@@ -388,7 +388,7 @@
         </div>
       </form>
 
-      <div class="note">First line: total months + extra days. Second line: years + remaining months + days.</div>
+      <div class="note">First line: total days. Second line: total months + extra days. Third line: years + remaining months + days.</div>
     </section>
 
     <section class="panel">
@@ -471,8 +471,10 @@
 
       const years = Math.floor(totalMonths / 12);
       const remainingMonths = totalMonths % 12;
+      const totalDays = getDaysBetween(startDate, endDate);
 
       return {
+        totalDays,
         totalMonths,
         years,
         remainingMonths,
@@ -515,10 +517,10 @@
     }
 
     function buildSummaryHtml(dateValue, title) {
-      const safeTitle = escapeHtml(title || 'Month Counter');
+      const safeTitle = escapeHtml(title || 'Day Counter');
 
       if (!dateValue) {
-        return 'Choose a date and it will immediately show both anniversary styles here.';
+        return 'Choose a date and it will immediately show total days, months, and years here.';
       }
 
       const startDate = parseLocalDate(dateValue);
@@ -527,7 +529,8 @@
 
       return `
         <span class="preview-title">${safeTitle}</span>
-        <div class="preview-line-main">This has been <strong>${result.totalMonths}</strong> ${monthWord(result.totalMonths)} and <strong>${result.extraDays}</strong> ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
+        <div class="preview-line-main">This has been <strong>${result.totalDays}</strong> ${dayWord(result.totalDays)} since ${formatDate(startDate)}.</div>
+        <div class="preview-line-sub">This has been <strong>${result.totalMonths}</strong> ${monthWord(result.totalMonths)} and <strong>${result.extraDays}</strong> ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
         <div class="preview-line-sub">This has been <strong>${result.years}</strong> ${yearWord(result.years)}, <strong>${result.remainingMonths}</strong> ${monthWord(result.remainingMonths)} and <strong>${result.extraDays}</strong> ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
       `;
     }
@@ -564,11 +567,13 @@
             </div>
 
             <div class="saved-meta">
+              <div class="pill">${result.totalDays} ${dayWord(result.totalDays)}</div>
               <div class="pill">${result.totalMonths} ${monthWord(result.totalMonths)} ${result.extraDays} ${dayWord(result.extraDays)}</div>
               <div class="pill">${result.years} ${yearWord(result.years)} ${result.remainingMonths} ${monthWord(result.remainingMonths)} ${result.extraDays} ${dayWord(result.extraDays)}</div>
             </div>
 
-            <div class="saved-detail">This has been ${result.totalMonths} ${monthWord(result.totalMonths)} and ${result.extraDays} ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
+            <div class="saved-detail">This has been ${result.totalDays} ${dayWord(result.totalDays)} since ${formatDate(startDate)}.</div>
+            <div class="saved-detail saved-detail-sub">This has been ${result.totalMonths} ${monthWord(result.totalMonths)} and ${result.extraDays} ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
             <div class="saved-detail saved-detail-sub">This has been ${result.years} ${yearWord(result.years)}, ${result.remainingMonths} ${monthWord(result.remainingMonths)} and ${result.extraDays} ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
           </article>
         `;
@@ -611,7 +616,7 @@
     form.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const name = counterNameInput.value.trim() || 'Month Counter';
+      const name = counterNameInput.value.trim() || 'Day Counter';
       const date = startDateInput.value;
       if (!date) return;
 
