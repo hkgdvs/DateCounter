@@ -1,50 +1,91 @@
-<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-<link rel="icon" href="icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Month Counter">
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Date Counter</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="icon.png" />
+  <link rel="icon" href="icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Month Counter" />
   <style>
     :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
+      --bg1: #f8fafc;
+      --bg2: #eef2ff;
+      --card: rgba(255, 255, 255, 0.72);
+      --card-strong: rgba(255, 255, 255, 0.88);
+      --text: #111827;
       --muted: #6b7280;
       --accent: #111827;
-      --accent-soft: #eef2ff;
-      --border: #e5e7eb;
+      --accent-soft: rgba(238, 242, 255, 0.95);
+      --border: rgba(255, 255, 255, 0.55);
+      --line: #e5e7eb;
       --danger: #b91c1c;
       --danger-soft: #fef2f2;
-      --shadow: 0 12px 32px rgba(17, 24, 39, 0.08);
-      --radius: 22px;
+      --shadow: 0 18px 45px rgba(17, 24, 39, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #f9fafb 0%, #eef2ff 100%);
       color: var(--text);
-      padding: 24px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.85), transparent 28%),
+        linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+      padding: 22px;
     }
 
     .app {
       width: 100%;
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
       background: var(--card);
-      border: 1px solid rgba(229, 231, 235, 0.9);
-      border-radius: var(--radius);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
       padding: 28px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .logo-shell {
+      width: 68px;
+      height: 68px;
+      flex: 0 0 68px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.90), rgba(226,232,240,0.76));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), 0 8px 20px rgba(15, 23, 42, 0.12);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .logo-shell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .eyebrow {
@@ -53,45 +94,48 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     h1 {
       margin: 0;
       font-size: clamp(28px, 5vw, 38px);
-      line-height: 1.1;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
     }
 
     .subtitle {
-      margin: 10px 0 24px;
+      margin: 8px 0 24px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
       font-size: 15px;
     }
 
     .panel {
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: var(--radius-lg);
       padding: 18px;
-      background: #fcfcff;
+      background: var(--card-strong);
       margin-bottom: 18px;
     }
 
     form {
       display: grid;
       gap: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
       gap: 14px;
+      width: 100%;
     }
 
     label {
       display: grid;
       gap: 8px;
+      min-width: 0;
       font-size: 14px;
       font-weight: 600;
     }
@@ -99,14 +143,22 @@
     input[type="date"],
     input[type="text"] {
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       padding: 14px 15px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
       font-size: 15px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
       background: white;
       color: var(--text);
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
     }
 
     input:focus {
@@ -114,11 +166,39 @@
       box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.08);
     }
 
+    .inline-preview {
+      margin-top: -2px;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      border: 1px solid #dbe3ff;
+      line-height: 1.72;
+      font-size: 14px;
+    }
+
+    .preview-title {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .preview-line-main {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .preview-line-sub {
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
     .actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     button {
@@ -150,21 +230,10 @@
     }
 
     .note {
-      margin-top: 14px;
+      margin-top: 10px;
       font-size: 13px;
       color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .inline-preview {
-      margin-top: -2px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: var(--accent-soft);
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.6;
-      border: 1px solid #dbe3ff;
+      line-height: 1.65;
     }
 
     .list-header {
@@ -194,10 +263,10 @@
     }
 
     .saved-item {
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
       border-radius: 18px;
       padding: 18px;
-      background: white;
+      background: rgba(255, 255, 255, 0.92);
     }
 
     .saved-top {
@@ -226,7 +295,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .pill {
@@ -240,14 +309,19 @@
     }
 
     .saved-detail {
-      color: var(--muted);
+      color: var(--text);
       font-size: 14px;
       line-height: 1.7;
     }
 
+    .saved-detail-sub {
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
     .empty-state {
       padding: 22px;
-      border: 1px dashed var(--border);
+      border: 1px dashed var(--line);
       border-radius: 18px;
       text-align: center;
       color: var(--muted);
@@ -266,8 +340,9 @@
     }
 
     @media (max-width: 640px) {
-      body { padding: 16px; }
-      .app { padding: 20px; }
+      body { padding: 14px; }
+      .app { padding: 18px; }
+      .header { align-items: flex-start; }
       .form-grid { grid-template-columns: 1fr; }
       .actions > * { flex: 1 1 100%; }
       .saved-top { flex-direction: column; }
@@ -278,9 +353,17 @@
 </head>
 <body>
   <main class="app">
-    <div class="eyebrow">Personal tracker</div>
-    <h1>Month Counter</h1>
-    <p class="subtitle">Save up to 10 important dates. Each saved item will instantly show how many full months and extra days have passed since that date.</p>
+    <div class="header">
+      <div class="logo-shell">
+        <img src="icon.png" alt="Month Counter app icon" />
+      </div>
+      <div>
+        <div class="eyebrow">Personal tracker</div>
+        <h1>Month Counter</h1>
+      </div>
+    </div>
+
+    <p class="subtitle">Save up to 10 important dates. Each saved item shows both anniversary styles: total months plus days, and full years plus months plus days.</p>
 
     <section class="panel">
       <form id="counterForm">
@@ -296,7 +379,7 @@
           </label>
         </div>
 
-        <div class="inline-preview" id="livePreview">Choose a date and it will immediately show the month and day count here.</div>
+        <div class="inline-preview" id="livePreview">Choose a date and it will immediately show both anniversary styles here.</div>
 
         <div class="actions">
           <button type="submit" class="primary">Save date</button>
@@ -305,14 +388,14 @@
         </div>
       </form>
 
-      <div class="note">This counts completed months. Example: from January 15 to February 14 = 0 months, and January 15 to February 15 = 1 month.</div>
+      <div class="note">First line: total months + extra days. Second line: years + remaining months + days.</div>
     </section>
 
     <section class="panel">
       <div class="list-header">
         <div>
           <h2 class="list-title">Saved dates</h2>
-          <p class="list-subtitle">Stored in your browser so the dates remain there when you reopen the page.</p>
+          <p class="list-subtitle">Stored in your browser so they stay there when you reopen the page on the same device and browser.</p>
         </div>
         <div class="limit-text" id="limitText">0 / 10 saved</div>
       </div>
@@ -347,17 +430,6 @@
       return new Date(year, month - 1, day);
     }
 
-    function getCompletedMonths(startDate, endDate = new Date()) {
-      let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
-      months += endDate.getMonth() - startDate.getMonth();
-
-      if (endDate.getDate() < startDate.getDate()) {
-        months -= 1;
-      }
-
-      return Math.max(0, months);
-    }
-
     function addMonths(date, monthsToAdd) {
       const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       const originalDay = result.getDate();
@@ -374,19 +446,50 @@
       return result;
     }
 
-    function getDaysSince(startDate, endDate = new Date()) {
+    function getDaysBetween(startDate, endDate) {
       const msPerDay = 1000 * 60 * 60 * 24;
       const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
       const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
       return Math.max(0, Math.floor((end - start) / msPerDay));
     }
 
-    function getMonthDayDifference(startDate, endDate = new Date()) {
-      const months = getCompletedMonths(startDate, endDate);
-      const shiftedDate = addMonths(startDate, months);
-      const days = getDaysSince(shiftedDate, endDate);
+    function getCompletedMonths(startDate, endDate = new Date()) {
+      let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      months += endDate.getMonth() - startDate.getMonth();
 
-      return { months, days };
+      if (endDate.getDate() < startDate.getDate()) {
+        months -= 1;
+      }
+
+      return Math.max(0, months);
+    }
+
+    function getAnniversaryBreakdown(startDate, endDate = new Date()) {
+      const totalMonths = getCompletedMonths(startDate, endDate);
+      const shiftedFromTotalMonths = addMonths(startDate, totalMonths);
+      const extraDays = getDaysBetween(shiftedFromTotalMonths, endDate);
+
+      const years = Math.floor(totalMonths / 12);
+      const remainingMonths = totalMonths % 12;
+
+      return {
+        totalMonths,
+        years,
+        remainingMonths,
+        extraDays
+      };
+    }
+
+    function monthWord(value) {
+      return value === 1 ? 'month' : 'months';
+    }
+
+    function dayWord(value) {
+      return value === 1 ? 'day' : 'days';
+    }
+
+    function yearWord(value) {
+      return value === 1 ? 'year' : 'years';
     }
 
     function loadSavedDates() {
@@ -411,32 +514,31 @@
       return div.innerHTML;
     }
 
-    function buildSummary(dateValue) {
+    function buildSummaryHtml(dateValue, title) {
+      const safeTitle = escapeHtml(title || 'Month Counter');
+
       if (!dateValue) {
-        return 'Choose a date and it will immediately show the month and day count here.';
+        return 'Choose a date and it will immediately show both anniversary styles here.';
       }
 
       const startDate = parseLocalDate(dateValue);
-      const today = new Date();
-      const { months, days } = getMonthDayDifference(startDate, today);
+      const now = new Date();
+      const result = getAnniversaryBreakdown(startDate, now);
 
-      return `This has been <strong>${months}</strong> month${months === 1 ? '' : 's'} and <strong>${days}</strong> day${days === 1 ? '' : 's'}</strong> since ${formatDate(startDate)}.`;
+      return `
+        <span class="preview-title">${safeTitle}</span>
+        <div class="preview-line-main">This has been <strong>${result.totalMonths}</strong> ${monthWord(result.totalMonths)} and <strong>${result.extraDays}</strong> ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
+        <div class="preview-line-sub">This has been <strong>${result.years}</strong> ${yearWord(result.years)}, <strong>${result.remainingMonths}</strong> ${monthWord(result.remainingMonths)} and <strong>${result.extraDays}</strong> ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
+      `;
     }
 
     function updatePreview() {
-      const dateValue = startDateInput.value;
-      if (!dateValue) {
-        livePreview.innerHTML = 'Choose a date and it will immediately show the month and day count here.';
-        return;
-      }
-
-      const title = counterNameInput.value.trim() || 'Month Counter';
-      livePreview.innerHTML = `<strong>${escapeHtml(title)}</strong><br>${buildSummary(dateValue)}`;
+      livePreview.innerHTML = buildSummaryHtml(startDateInput.value, counterNameInput.value.trim());
     }
 
     function renderSavedDates() {
       const items = loadSavedDates();
-      const today = new Date();
+      const now = new Date();
       limitText.textContent = `${items.length} / ${MAX_ITEMS} saved`;
 
       if (items.length === 0) {
@@ -446,7 +548,7 @@
 
       savedList.innerHTML = items.map((item, index) => {
         const startDate = parseLocalDate(item.date);
-        const { months, days } = getMonthDayDifference(startDate, today);
+        const result = getAnniversaryBreakdown(startDate, now);
 
         return `
           <article class="saved-item">
@@ -462,11 +564,12 @@
             </div>
 
             <div class="saved-meta">
-              <div class="pill">${months} month${months === 1 ? '' : 's'}</div>
-              <div class="pill">${days} day${days === 1 ? '' : 's'}</div>
+              <div class="pill">${result.totalMonths} ${monthWord(result.totalMonths)} ${result.extraDays} ${dayWord(result.extraDays)}</div>
+              <div class="pill">${result.years} ${yearWord(result.years)} ${result.remainingMonths} ${monthWord(result.remainingMonths)} ${result.extraDays} ${dayWord(result.extraDays)}</div>
             </div>
 
-            <div class="saved-detail">This has been ${months} month${months === 1 ? '' : 's'} and ${days} day${days === 1 ? '' : 's'} since ${formatDate(startDate)}.</div>
+            <div class="saved-detail">This has been ${result.totalMonths} ${monthWord(result.totalMonths)} and ${result.extraDays} ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
+            <div class="saved-detail saved-detail-sub">This has been ${result.years} ${yearWord(result.years)}, ${result.remainingMonths} ${monthWord(result.remainingMonths)} and ${result.extraDays} ${dayWord(result.extraDays)} since ${formatDate(startDate)}.</div>
           </article>
         `;
       }).join('');
@@ -542,7 +645,10 @@
 
     updatePreview();
     renderSavedDates();
-    setInterval(renderSavedDates, 60 * 1000);
+    setInterval(() => {
+      updatePreview();
+      renderSavedDates();
+    }, 60 * 1000);
   </script>
 </body>
 </html>
