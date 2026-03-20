@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Month Counter</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #111827;
+      --accent-soft: #eef2ff;
+      --border: #e5e7eb;
+      --danger: #b91c1c;
+      --danger-soft: #fef2f2;
+      --shadow: 0 12px 32px rgba(17, 24, 39, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f9fafb 0%, #eef2ff 100%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 38px);
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      margin: 10px 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: #fcfcff;
+      margin-bottom: 18px;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input[type="date"],
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: white;
+      color: var(--text);
+    }
+
+    input:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.08);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: #eef2f7;
+      color: var(--text);
+    }
+
+    .danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .inline-preview {
+      margin-top: -2px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      border: 1px solid #dbe3ff;
+    }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .list-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .list-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .saved-item {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      background: white;
+    }
+
+    .saved-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .saved-name {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .saved-date {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .saved-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--accent-soft);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .saved-detail {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .empty-state {
+      padding: 22px;
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      text-align: center;
+      color: var(--muted);
+      background: #fafafa;
+    }
+
+    .limit-text {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .muted-button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 16px; }
+      .app { padding: 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .actions > * { flex: 1 1 100%; }
+      .saved-top { flex-direction: column; }
+      .muted-button-row { width: 100%; }
+      .muted-button-row button { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="eyebrow">Personal tracker</div>
+    <h1>Month Counter</h1>
+    <p class="subtitle">Save up to 10 important dates. Each saved item will instantly show how many full months and extra days have passed since that date.</p>
+
+    <section class="panel">
+      <form id="counterForm">
+        <div class="form-grid">
+          <label>
+            Counter title
+            <input type="text" id="counterName" placeholder="Example: Anniversary" maxlength="60" />
+          </label>
+
+          <label>
+            Start date
+            <input type="date" id="startDate" required />
+          </label>
+        </div>
+
+        <div class="inline-preview" id="livePreview">Choose a date and it will immediately show the month and day count here.</div>
+
+        <div class="actions">
+          <button type="submit" class="primary">Save date</button>
+          <button type="button" class="secondary" id="todayBtn">Use today</button>
+          <button type="button" class="danger" id="clearAllBtn">Clear all</button>
+        </div>
+      </form>
+
+      <div class="note">This counts completed months. Example: from January 15 to February 14 = 0 months, and January 15 to February 15 = 1 month.</div>
+    </section>
+
+    <section class="panel">
+      <div class="list-header">
+        <div>
+          <h2 class="list-title">Saved dates</h2>
+          <p class="list-subtitle">Stored in your browser so the dates remain there when you reopen the page.</p>
+        </div>
+        <div class="limit-text" id="limitText">0 / 10 saved</div>
+      </div>
+
+      <div class="saved-list" id="savedList"></div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'month-counter-saved-dates';
+    const MAX_ITEMS = 10;
+
+    const form = document.getElementById('counterForm');
+    const startDateInput = document.getElementById('startDate');
+    const counterNameInput = document.getElementById('counterName');
+    const todayBtn = document.getElementById('todayBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    const livePreview = document.getElementById('livePreview');
+    const savedList = document.getElementById('savedList');
+    const limitText = document.getElementById('limitText');
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat('en-MY', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    function parseLocalDate(dateString) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function getCompletedMonths(startDate, endDate = new Date()) {
+      let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+      months += endDate.getMonth() - startDate.getMonth();
+
+      if (endDate.getDate() < startDate.getDate()) {
+        months -= 1;
+      }
+
+      return Math.max(0, months);
+    }
+
+    function addMonths(date, monthsToAdd) {
+      const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const originalDay = result.getDate();
+      result.setDate(1);
+      result.setMonth(result.getMonth() + monthsToAdd);
+
+      const lastDayOfTargetMonth = new Date(
+        result.getFullYear(),
+        result.getMonth() + 1,
+        0
+      ).getDate();
+
+      result.setDate(Math.min(originalDay, lastDayOfTargetMonth));
+      return result;
+    }
+
+    function getDaysSince(startDate, endDate = new Date()) {
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+      const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+      return Math.max(0, Math.floor((end - start) / msPerDay));
+    }
+
+    function getMonthDayDifference(startDate, endDate = new Date()) {
+      const months = getCompletedMonths(startDate, endDate);
+      const shiftedDate = addMonths(startDate, months);
+      const days = getDaysSince(shiftedDate, endDate);
+
+      return { months, days };
+    }
+
+    function loadSavedDates() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveSavedDates(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function buildSummary(dateValue) {
+      if (!dateValue) {
+        return 'Choose a date and it will immediately show the month and day count here.';
+      }
+
+      const startDate = parseLocalDate(dateValue);
+      const today = new Date();
+      const { months, days } = getMonthDayDifference(startDate, today);
+
+      return `This has been <strong>${months}</strong> month${months === 1 ? '' : 's'} and <strong>${days}</strong> day${days === 1 ? '' : 's'}</strong> since ${formatDate(startDate)}.`;
+    }
+
+    function updatePreview() {
+      const dateValue = startDateInput.value;
+      if (!dateValue) {
+        livePreview.innerHTML = 'Choose a date and it will immediately show the month and day count here.';
+        return;
+      }
+
+      const title = counterNameInput.value.trim() || 'Month Counter';
+      livePreview.innerHTML = `<strong>${escapeHtml(title)}</strong><br>${buildSummary(dateValue)}`;
+    }
+
+    function renderSavedDates() {
+      const items = loadSavedDates();
+      const today = new Date();
+      limitText.textContent = `${items.length} / ${MAX_ITEMS} saved`;
+
+      if (items.length === 0) {
+        savedList.innerHTML = '<div class="empty-state">No saved dates yet. Add your first one above.</div>';
+        return;
+      }
+
+      savedList.innerHTML = items.map((item, index) => {
+        const startDate = parseLocalDate(item.date);
+        const { months, days } = getMonthDayDifference(startDate, today);
+
+        return `
+          <article class="saved-item">
+            <div class="saved-top">
+              <div>
+                <h3 class="saved-name">${escapeHtml(item.name || 'Month Counter')}</h3>
+                <div class="saved-date">Since ${formatDate(startDate)}</div>
+              </div>
+              <div class="muted-button-row">
+                <button type="button" class="secondary" onclick="editItem(${index})">Load</button>
+                <button type="button" class="danger" onclick="deleteItem(${index})">Delete</button>
+              </div>
+            </div>
+
+            <div class="saved-meta">
+              <div class="pill">${months} month${months === 1 ? '' : 's'}</div>
+              <div class="pill">${days} day${days === 1 ? '' : 's'}</div>
+            </div>
+
+            <div class="saved-detail">This has been ${months} month${months === 1 ? '' : 's'} and ${days} day${days === 1 ? '' : 's'} since ${formatDate(startDate)}.</div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function setToday() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      startDateInput.value = `${yyyy}-${mm}-${dd}`;
+      updatePreview();
+    }
+
+    function resetForm() {
+      counterNameInput.value = '';
+      startDateInput.value = '';
+      updatePreview();
+    }
+
+    window.editItem = function(index) {
+      const items = loadSavedDates();
+      const item = items[index];
+      if (!item) return;
+
+      counterNameInput.value = item.name || '';
+      startDateInput.value = item.date || '';
+      updatePreview();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteItem = function(index) {
+      const items = loadSavedDates();
+      items.splice(index, 1);
+      saveSavedDates(items);
+      renderSavedDates();
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const name = counterNameInput.value.trim() || 'Month Counter';
+      const date = startDateInput.value;
+      if (!date) return;
+
+      const items = loadSavedDates();
+      const existingIndex = items.findIndex(item => item.name === name && item.date === date);
+
+      if (existingIndex >= 0) {
+        items.splice(existingIndex, 1);
+      }
+
+      if (items.length >= MAX_ITEMS) {
+        alert('You can save up to 10 dates only. Please delete one first.');
+        return;
+      }
+
+      items.unshift({ name, date });
+      saveSavedDates(items);
+      renderSavedDates();
+      resetForm();
+    });
+
+    counterNameInput.addEventListener('input', updatePreview);
+    startDateInput.addEventListener('input', updatePreview);
+    todayBtn.addEventListener('click', setToday);
+
+    clearAllBtn.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderSavedDates();
+      resetForm();
+    });
+
+    updatePreview();
+    renderSavedDates();
+    setInterval(renderSavedDates, 60 * 1000);
+  </script>
+</body>
+</html>
